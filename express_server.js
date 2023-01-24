@@ -23,6 +23,7 @@ const urlDatabase = {
 app.use(express.urlencoded({ extended: true }));
 
 
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -38,14 +39,13 @@ app.post("/urls", (req, res) => {
 });;
 
 app.post("/urls/:id", (req, res) => {
-  const shortURL = req.params.id;
-  urlDatabase[shortURL] = req.body.longURL
+  urlDatabase.longURL=req.body.updatedURL;
   res.redirect("/urls");
 });;
 
 
-app.post("/urls/id/delete", (req, res) => {
-  const shortURL = req.params.shortURL;
+app.post("/urls/:id/delete", (req, res) => {
+  const shortURL = req.params.id;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 });;

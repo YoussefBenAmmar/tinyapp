@@ -34,12 +34,12 @@
                 <%= urls[id] %>
               </td>
               <td>
-                <form method="POST" action="/urls/<%= id %>/delete">
+                <form method="GET" action="/urls/<%= id %>">
                   <button type="submit" style="background-color:white; border-color:blue; color:blue">Edit</button>
                 </form>
               </td>
               <td>
-                <form method="POST" action="/urls/:<%= id %>">
+                <form method="POST" action="/urls/<%= id %>/delete">
                   <button type="submit" style="background-color:white; border-color:white; color:red">Delete</button>
                 </form>
               </td>
