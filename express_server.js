@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser')
 
 const generateRandomString = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -22,6 +23,7 @@ const urlDatabase = {
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser())
 
 
 app.get("/", (req, res) => {
@@ -38,8 +40,9 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });;
 
+
 app.post("/urls/:id", (req, res) => {
-  urlDatabase.longURL=req.body.updatedURL;
+  urlDatabase.longURL = req.body.updatedURL;
   res.redirect("/urls");
 });;
 
@@ -48,8 +51,18 @@ app.post("/urls/:id/delete", (req, res) => {
   const shortURL = req.params.id;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
-});;
+});
 
+app.post("/login", (req, res) => {
+  let username = req.body.username;
+  res.cookie("username", username);
+  res.redirect("/urls");
+});
+app.post("/logout", (req, res) => {
+
+  res.clearCookie("username");
+  res.redirect("/urls")
+});
 
 
 app.get("/u/:id", (req, res) => {
@@ -59,20 +72,29 @@ app.get("/u/:id", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  // let username = req.body.username;
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
+
+
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  // let username = req.body.username;
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
+
+  // let username = req.body.username;
   const shortId = req.params.id;
   const longURL = urlDatabase[shortId];
-  const templateVars = { id: shortId, longURL };
+  const templateVars = { id: shortId, longURL, username:req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
+
+
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
