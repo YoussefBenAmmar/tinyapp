@@ -12,7 +12,11 @@
 </head>
 
 <body>
-  <%- include ('partials/_header') %>
+  <% if (user){ %>
+    <%- include ('partials/_header', {user: user}) %>
+  <% } else { %>
+    <%- include ('partials/_header') %>
+  <% } %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
       <table class="table">
