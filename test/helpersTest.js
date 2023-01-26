@@ -23,7 +23,7 @@ describe('lookupUsersEmail', function() {
   });
 
   it('should return undefined for non-existent email', () => {
-    const user = getUserByEmail('ghostperson@example.com', testUsers);
+    const user = lookupUsersEmail('ghostperson@example.com', testUsers);
     assert.equal(user, undefined);
   });
 });
