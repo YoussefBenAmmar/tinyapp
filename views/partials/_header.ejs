@@ -25,10 +25,11 @@
         <form method="POST" action="/logout" > 
           <button type="submit" class="btn btn-primary">logout</button></form>
       </div>
-     <% } %>
-
-    <a  href="/urls/login" class="btn btn-primary">Login</a>
+     <% }  else { %>
+      <a  href="/urls/login" class="btn btn-primary">Login</a>
       <a  href="/urls/register" class="btn btn-primary">Register</a>
+<% } %>
+
       </main>
 </nav>
 </header>
