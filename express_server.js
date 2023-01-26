@@ -95,13 +95,16 @@ app.post("/urls/:id", (req, res) => {
 
 
 app.post("/urls/:id/delete", (req, res) => {
-  if (req.cookies.user_ID) {
+  let id = req.cookies.user_ID;
+  let shortId = req.params.id;
+  let  userURL = urlsForUser(id, urlDatabase)
+  if (!req.cookies.user_ID || !userURL[shortId]) {
+   res.status(403);
+    res.send("You are not authorized to this. ");
+  } else {
     const shortURL = req.params.id;
     delete urlDatabase[shortURL];
     res.redirect("/urls");
-  } else {
-    res.status(403);
-    res.send("You must be logged in");
   }
 });
 
@@ -213,9 +216,9 @@ app.get("/urls/:id", (req, res) => {
   const userURL = urlsForUser(id, urlDatabase);
   const templateVars = { userURL, id: shortId, longURL, user: users[id] };
 
-  if (!urlDatabase[shortId]) {
+  if (!longURL) {
     res.status(404);
-    res.send("This Short URL ID does not exist (yet?)");
+    res.send("This does not exist (yet?)");
   } else if (!id || !userURL[shortId]) {
     res.status(403);
     res.send("You are not authorized to check this out (yet?)");
