@@ -9,41 +9,12 @@ const morgan = require('morgan');
 const bcrypt = require("bcryptjs");
 const password = "purple-monkey-dinosaur"; // found in the req.body object
 const hashedPassword = bcrypt.hashSync(password, 10);
+const { lookupUsersEmail, urlsForUser, generateRandomString } = require('./helpers');
 
 
 // Helper functions:
 
-const generateRandomString = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let randomString = '';
-  while (randomString.length < 6) {
-    randomString += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return randomString;
-};
-
-
-const lookupUsersEmail = (email, database) => {
-  for (let i in database) {
-    if (database[i].email === email) {
-      return database[i];
-    }
-  }
-  return false;
-};
-
-const urlsForUser = (id, database) => {
-  let userURL = {};
-  for (const shortURL in database) {
-    if (database[shortURL].userID === id) {
-      userURL[shortURL] = database[shortURL];
-    }
-  }
-  return userURL;
-};
-
-
- // Database:
+// Database:
 const urlDatabase = {
   b6UTxQ: {
     longURL: "https://www.tsn.ca",
@@ -154,7 +125,7 @@ app.post("/login", (req, res) => {
       res.status(403);
       res.send("Infomration do not match");
     }
-  } 
+  }
 
 
   if (!email || !password) {
@@ -273,7 +244,7 @@ app.get("/urls/:id", (req, res) => {
   const shortId = req.params.id;
   const longURL = urlDatabase[shortId].longURL;
   const userURL = urlsForUser(id, urlDatabase);
-  console.log("userURL:", userURL)
+  console.log("userURL:", userURL);
   const templateVars = { userURL, id: shortId, longURL, user: users[id] };
 
   if (!longURL) {
