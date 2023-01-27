@@ -87,7 +87,14 @@ app.post("/urls", (req, res) => {
 
 
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id].longURL = req.body.updatedURL;
+
+  const shortURL = req.params.id;
+  const { longURL } = urlDatabase[shortURL] ?? {};
+  if (!longURL) {
+    res.status(404);
+    return res.send("No No No");
+  }
+  urlDatabase[shortURL].longURL = req.body.updatedURL;
   res.redirect("/urls");
 });;
 
@@ -178,7 +185,11 @@ app.post("/logout", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL].longURL;
+  const { longURL } = urlDatabase[shortURL] ?? {};
+  if (!longURL) {
+    res.status(404);
+    return res.send("No No No");
+  }
   res.redirect(longURL);
 });
 
@@ -242,7 +253,7 @@ app.get("/urls/:id", (req, res) => {
 
   const id = req.session.user_ID;
   const shortId = req.params.id;
-  const longURL = urlDatabase[shortId].longURL;
+  const { longURL } = urlDatabase[shortId] ?? {};
   const userURL = urlsForUser(id, urlDatabase);
   console.log("userURL:", userURL);
   const templateVars = { userURL, id: shortId, longURL, user: users[id] };
